@@ -1433,13 +1433,13 @@
         <div class="container">
             <div class="footer-content">
                 <div class="social-links">
-                    <a href="https://github.com/YossraTlili" target="_blank" class="social-link" title="GitHub">
+                    <a href="https://github.com/yossra5" target="_blank" class="social-link" title="GitHub">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://linkedin.com/in/yossra-tlili" target="_blank" class="social-link" title="LinkedIn">
+                    <a href="https://www.linkedin.com/in/yossra-tlili-9b686a372/" target="_blank" class="social-link" title="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
-                    <a href="mailto:yossra.tlili@example.com" class="social-link" title="Email">
+                    <a href="mailto:yossra.tlili@esprit.tn" class="social-link" title="Email">
                         <i class="fas fa-envelope"></i>
                     </a>
                     <a href="CV_Yossra_Tlili.pdf" class="social-link" title="Download CV">
@@ -1546,8 +1546,9 @@
             submitBtn.disabled = true;
             
             try {
-                // In a real implementation, you would send this to a backend server
-                // For demo purposes, we'll simulate API call
+                // For demo purposes - in real use, connect to backend
+                // Using EmailJS for email functionality (free service)
+                // You would need to sign up at https://www.emailjs.com/
                 
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 1500));
@@ -1557,7 +1558,16 @@
                 formStatus.className = 'form-status success';
                 
                 // Log form data (in real app, this would go to backend)
-                console.log('Form submission:', formData);
+                console.log('Form submission received:', {
+                    ...formData,
+                    to: 'yossra.tlili@esprit.tn'
+                });
+                
+                // Optional: Open default mail client as fallback
+                const mailtoLink = `mailto:yossra.tlili@esprit.tn?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
+                
+                // Uncomment to actually send via mailto (will open email client)
+                // window.location.href = mailtoLink;
                 
                 // Reset form
                 contactForm.reset();
@@ -1570,7 +1580,7 @@
                 
             } catch (error) {
                 // Error response
-                formStatus.textContent = 'Sorry, there was an error sending your message. Please try again or email me directly.';
+                formStatus.textContent = 'Sorry, there was an error sending your message. Please try emailing me directly at yossra.tlili@esprit.tn';
                 formStatus.className = 'form-status error';
                 
                 // Hide error message after 5 seconds
@@ -1622,6 +1632,16 @@
                     }, index * 100);
                 });
             }, 300);
+        });
+        
+        // Add project GitHub links when you have them
+        document.querySelectorAll('.project-links .btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    alert('GitHub link coming soon! You can view my profile at https://github.com/yossra5');
+                }
+            });
         });
     </script>
 </body>
