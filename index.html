@@ -1526,42 +1526,77 @@
         // Enhanced Contact Form with Email Integration
         const contactForm = document.getElementById('contactForm');
         const formStatus = document.getElementById('formStatus');
+        emailjs.init('1dPusgQYBiNerZ49N');
         
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Show loading state
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            submitBtn.disabled = true;
-            
-            try {
-                // For demo purposes - in real use, connect to backend
-                // Using EmailJS for email functionality (free service)
-                // You would need to sign up at https://www.emailjs.com/
-                
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Success response
-                formStatus.textContent = `Thank you, ${formData.name}! Your message has been sent successfully. I'll respond to ${formData.email} within 24 hours.`;
-                formStatus.className = 'form-status success';
-                
-                // Log form data (in real app, this would go to backend)
-                console.log('Form submission received:', {
-                    ...formData,
-                    to: 'yossra.tlili@esprit.tn'
-                });
+      contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value,
+        timestamp: new Date().toISOString()
+    };
+    
+    // Show loading state
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitBtn.disabled = true;
+    
+    try {
+        // Send email using EmailJS
+        const response = await emailjs.send(
+            'service_vapqepf', // Your Service ID
+            'template_fkfp5xm', // Your Template ID (you need to create this)
+            {
+                from_name: formData.name,
+                from_email: formData.email,
+                subject: formData.subject,
+                message: formData.message,
+                to_email: 'yossra.tlili@esprit.tn' // Your email
+            }
+        );
+        
+        // Success response
+        formStatus.textContent = `Thank you, ${formData.name}! Your message has been sent successfully. I'll respond to ${formData.email} within 24 hours.`;
+        formStatus.className = 'form-status success';
+        
+        console.log('Email sent successfully:', response);
+        
+        // Reset form
+        contactForm.reset();
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+            formStatus.className = 'form-status';
+            formStatus.textContent = '';
+        }, 5000);
+        
+    } catch (error) {
+        // Error response
+        console.error('Email sending failed:', error);
+        formStatus.textContent = 'Sorry, there was an error sending your message. Please try emailing me directly at yossra.tlili@esprit.tn';
+        formStatus.className = 'form-status error';
+        
+        // Hide error message after 5 seconds
+        setTimeout(() => {
+            formStatus.className = 'form-status';
+            formStatus.textContent = '';
+        }, 5000);
+        
+    } finally {
+        // Restore button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
                 
                 // Optional: Open default mail client as fallback
                 const mailtoLink = `mailto:yossra.tlili@esprit.tn?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
@@ -1644,5 +1679,6 @@
             });
         });
     </script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </body>
 </html>
